@@ -1,0 +1,7 @@
+node_modules
+bower_components
+*.checkpoint
+*.log
+*.iml
+.babelrc
+static/bundle.js
