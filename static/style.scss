@@ -1,0 +1,51 @@
+$loader-first_color: orange;
+$loader-second-color: darkgrey;
+$loader-border-color: #f3f3f3;
+
+.one-line{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.img-avatar {
+    width: 50px;
+}
+
+.btn-user-relation{
+    width: 100%;
+}
+
+.user-row{
+    margin-bottom: 10px;
+}
+
+.base-loader{
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+.button-loader {
+    @extend .base-loader;
+    margin: 0 auto;
+    border: 8px solid $loader-border-color;
+    border-top-color: $loader-first_color;
+    border-bottom-color: $loader-second-color;
+    width: 32px; height: 32px;
+}
+.content-loader {
+    @extend .base-loader;
+    margin: 20px auto;
+    border: 16px solid $loader-border-color;
+    border-top-color: $loader-first_color;
+    border-bottom-color: $loader-second-color;
+    width: 120px; height: 120px;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* https://github.com/reactjs/react-transition-group */
+
+.active-link{
+    color: red;
+}

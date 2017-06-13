@@ -1,0 +1,21 @@
+{
+  "name": "instabot",
+  "authors": [
+    "DMITRY STARODUBTSEV <dmitry.starodubcev@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "3",
+    "jquery": "^3.2.1"
+  }
+}
