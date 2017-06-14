@@ -264,7 +264,7 @@ class MainMenu extends React.Component {
         else if(path === '/fans'){
             fans_active = 'active';
         }
-        if(props.customer.username === null){
+        if(props.customer.username === null || props.customer.token === null){
             return (
                 <NavLayout>
                     <li>
@@ -331,7 +331,7 @@ class LoginForm extends React.Component{
         if(this.props.customer.loading){
             return <BigLoader/>;
         }
-        if(this.props.customer.username){
+        if(this.props.customer.username && this.props.customer.token){
             return (
                 <div className="alert alert-success" role="alert">
                     Logged as {this.props.customer.username}
