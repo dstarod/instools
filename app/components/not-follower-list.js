@@ -43,9 +43,8 @@ class NotFollowerList extends React.Component{
         }
     }
     render(){
-        const props = this.props;
-        if(props.loading === true) return <BigLoader/>;
-        return <NotFollowerListView users={props.users} />
+        if(this.props.loading === true) return <BigLoader/>;
+        return <NotFollowerListView users={this.props.users} />
     }
 }
 

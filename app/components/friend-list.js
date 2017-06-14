@@ -20,28 +20,30 @@ const FriendListView = props => (
             <UserInfoTag>
                 <UserTableRowInfo
                     avatar="/static/img/noavatar.png"
-                    name={props.friends.length + ' user(s)'}
+                    name={props.users.length + ' user(s)'}
                     full_name=''/>
             </UserInfoTag>
             <UserControlTag />
         </UserRowTag>
-        <UserList users={props.friends} />
+        <UserList users={props.users} />
     </div>
 );
 FriendListView.propTypes = {
-    friends: PropTypes.array.isRequired
+    users: PropTypes.array.isRequired
 };
 
-const FriendList = props => {
-    if(props.loading === true) return <BigLoader/>;
-
-    if(props.loaded === false){
-        actions.loadRelations();
-        return <EmptyList/>;
+class FriendList extends React.Component{
+    componentWillMount(){
+        if(this.props.loaded === false){
+            actions.loadRelations();
+            return <EmptyList/>;
+        }
     }
-
-    return <FriendListView friends={props.users}/>
-};
+    render(){
+        if(this.props.loading === true) return <BigLoader/>;
+        return <FriendListView users={this.props.users} />
+    }
+}
 
 const mapStateToProps = function(store) {
     const subscriptions_pk = store.subscriptionList.users.map(
