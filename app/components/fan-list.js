@@ -57,7 +57,9 @@ const mapStateToProps = function(store) {
             (user) => !subscriptions_pk.includes(user.id)
         ).map(
             (user) => {
-                user.followed=constants.USER_NOT_FOLLOWER;
+                if(user.followed === undefined){
+                    user.followed=constants.USER_NOT_FOLLOWER;
+                }
                 return user;
             }
         ),
