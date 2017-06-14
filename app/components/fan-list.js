@@ -24,9 +24,7 @@ const FanListView = props => (
                     name={props.users.length + ' user(s)'}
                     full_name=''/>
             </UserInfoTag>
-            <UserControlTag>
-                {/*<BanButton />*/}
-            </UserControlTag>
+            <UserControlTag />
         </UserRowTag>
         <UserList users={props.users} />
     </div>
