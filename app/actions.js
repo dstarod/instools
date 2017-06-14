@@ -139,7 +139,7 @@ exports.Unfollow = function (user_id) {
         },
         (user_id) => {
             store.dispatch({
-                type: constants.SUBSCRIPTIONS_REMOVE,
+                type: constants.SUBSCRIPTION_REMOVE,
                 payload: user_id
             });
         }

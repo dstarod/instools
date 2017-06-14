@@ -21,7 +21,7 @@ exports.subscriptionListReducer = function (state={users: [], loading: false, lo
                     loaded: true,
                 }
             );
-        case constants.SUBSCRIPTIONS_REMOVE:
+        case constants.SUBSCRIPTION_REMOVE:
             return Object.assign(
                 {}, state, {
                     users: state.users.filter(
