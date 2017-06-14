@@ -46,20 +46,24 @@ class FriendList extends React.Component{
 }
 
 const mapStateToProps = function(store) {
-    const subscriptions_pk = store.subscriptionList.users.map(
+    const subscribers_pk = store.subscriberList.users.map(
         (user) => user.id
     );
     return {
         loading: store.subscriberList.loading || store.subscriptionList.loading,
         loaded: store.subscriberList.loaded && store.subscriptionList.loaded,
-        users: store.subscriberList.users.filter(
-            (user) => subscriptions_pk.includes(user.id)
-        ).map(
-            (user) => {
-                user.followed=constants.USER_FOLLOWER;
-                return user;
-            }
-        ),
+        users: store.subscriptionList.users
+            .filter(
+                (user) => subscribers_pk.includes(user.id)
+            )
+            .map(
+                (user) => {
+                    if(user.followed === undefined){
+                        user.followed=constants.USER_FOLLOWER;
+                    }
+                    return user;
+                }
+            ),
     };
 };
 
