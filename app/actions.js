@@ -153,20 +153,20 @@ exports.Follow = function (user) {
 exports.Unfollow = function (user) {
     api.Unfollow(
         [user.id],
-        () => {
+        (user_id) => {
             store.dispatch({
                 type: constants.USER_CHANGES_IN_PROGRESS,
-                payload: user.id
+                payload: user_id
             });
         },
-        () => {
+        (user_id) => {
             store.dispatch({
                 type: constants.SUBSCRIPTION_REMOVE,
-                payload: user.id
+                payload: user_id
             });
             store.dispatch({
                 type: constants.USER_CHANGES_FINISHED,
-                payload: user.id
+                payload: user_id
             });
         }
     );
@@ -185,7 +185,11 @@ exports.UnfollowAll = function () {
     users.map(function (user) {
         setUserWaiting(user.id);
     });
-    api.Unfollow(users.map(function (user) {
-        return user.id;
-    }), setUserAsChangingRelation, setUserAsUnFollowed);
+    api.Unfollow(
+        users.map(function (user) {
+            return user.id;
+        }),
+        (user_id)=>setUserAsChangingRelation(user_id),
+        (user_id)=>setUserAsUnFollowed(user_id)
+    );
 };

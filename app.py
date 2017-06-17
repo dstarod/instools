@@ -51,12 +51,12 @@ def generate_api_task(username, password):
         return str(e)
 
 
-@fake_users
+# @fake_users
 def load_subscribers_task(token):
     return app[token].getTotalSelfFollowers()
 
 
-@fake_users
+# @fake_users
 def load_subscriptions_task(token):
     return app[token].getTotalSelfFollowings()
 

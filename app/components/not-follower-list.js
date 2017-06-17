@@ -37,7 +37,7 @@ NotFollowerListView.propTypes = {
 
 class NotFollowerList extends React.Component{
     componentWillMount(){
-        if(this.props.loaded === false){
+        if(this.props.loaded === false && this.props.loading !== true){
             actions.loadRelations();
             return <EmptyList/>;
         }

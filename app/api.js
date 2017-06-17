@@ -31,10 +31,10 @@ const apiAuthorizeToken = () => {
 
 const Unfollow = function(user_ids, act_before, act_after){
     let user_id = user_ids.shift();
-    act_before();
+    act_before(user_id);
     axios.put(api_routes.UNFOLLOW+user_id, null, apiAuthorizeToken()).then(
         function (result) {
-            act_after();
+            act_after(user_id);
             if(user_ids.length > 0){
                 Unfollow(user_ids, act_before, act_after);
             }
