@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
-import constants, {routes} from '../constants';
+import constants, {routes, list_type} from '../constants';
 
 const EmptyList = props => (
     <h3>Empty list</h3>
@@ -70,7 +70,7 @@ exports.UnfollowAllButton = UnfollowAllButton;
 
 const UnfollowButton = props => {
     let click = function (e) {
-        actions.Unfollow(props.user_id);
+        actions.Unfollow(props.user);
     };
     return (
         <button className={"btn btn-sm btn-warning btn-user-relation"} onClick={click}>
@@ -79,15 +79,15 @@ const UnfollowButton = props => {
     );
 };
 UnfollowButton.propTypes = {
-    user_id: PropTypes.number,
+    user: PropTypes.object.isRequired,
 };
 
 const FollowButton = props => {
     let click = function (e) {
-        actions.Follow(props.user_id);
+        actions.Follow(props.user);
     };
     let template;
-    if(props.private){
+    if(props.user.private){
         template = (
             <button
                 className="btn btn-sm btn-default btn-user-relation disabled">
@@ -109,7 +109,7 @@ const FollowButton = props => {
     );
 };
 FollowButton.propTypes = {
-    user_id: PropTypes.number,
+    user: PropTypes.object.isRequired,
 };
 
 const UserTableRowInfoAvatar = props => {
@@ -128,14 +128,13 @@ UserTableRowInfoAvatar.propTypes = {
 const UserTableRowInfoName = props => {
     return (
         <div>
-            <div><strong>{props.name}</strong></div>
-            <div className='text-muted one-line'>{props.full_name}</div>
+            <div><strong>{props.user.name}</strong></div>
+            <div className='text-muted one-line'>{props.user.full_name}</div>
         </div>
     );
 };
 UserTableRowInfoName.propTypes = {
-    name: PropTypes.string.isRequired,
-    full_name: PropTypes.string,
+    user: PropTypes.object.isRequired,
 };
 
 
@@ -143,39 +142,38 @@ const UserTableRowInfo = props => {
     return (
         <div className="media">
             <div className="media-left">
-                <UserTableRowInfoAvatar src={props.avatar} alt={props.name}/>
+                <UserTableRowInfoAvatar src={props.user.avatar} alt={props.user.name}/>
             </div>
             <div className="media-body">
-                <UserTableRowInfoName name={props.name} full_name={props.full_name}/>
+                <UserTableRowInfoName user={props.user} />
             </div>
         </div>
     )
 };
 UserTableRowInfo.propTypes = {
-    name: PropTypes.string.isRequired,
-    full_name: PropTypes.string,
-    avatar: PropTypes.string.isRequired,
+    user: PropTypes.object.isRequired,
 };
 exports.UserTableRowInfo = UserTableRowInfo;
 
 
 const UserTableRow = props => {
     let user_control;
-    if(props.followed === constants.USER_FOLLOWER) {
-        user_control = (
-            <UnfollowButton user_id={props.id}/>
-        );
-    }
-    else if(props.followed === constants.USER_NOT_FOLLOWER) {
-        user_control = (
-            <FollowButton user_id={props.id} private={props.private}/>
-        );
-    }
-    else if(props.followed === constants.USER_CHANGES_IN_PROGRESS){
+
+    if(props.user.state === constants.USER_CHANGES_IN_PROGRESS){
         user_control = <SmallLoader/>;
     }
-    else if(props.followed === constants.USER_CHANGES_WAITING){
+    else if(props.user.state === constants.USER_CHANGES_WAITING){
         user_control = <WaitingButton/>;
+    }
+    else if(props.type === list_type.FRIENDS || props.type === list_type.NOT_FOLLOWERS) {
+        user_control = (
+            <UnfollowButton user={props.user}/>
+        );
+    }
+    else if(props.type === list_type.FANS) {
+        user_control = (
+            <FollowButton user={props.user} />
+        );
     }
     else {
         user_control = (
@@ -186,11 +184,7 @@ const UserTableRow = props => {
     return (
         <UserRowTag>
             <UserInfoTag>
-                <UserTableRowInfo
-                    avatar={props.avatar}
-                    name={props.name}
-                    full_name={props.full_name}
-                />
+                <UserTableRowInfo user={props.user} />
             </UserInfoTag>
             <UserControlTag>
                 {user_control}
@@ -199,20 +193,15 @@ const UserTableRow = props => {
     )
 };
 UserTableRow.propTypes = {
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    full_name: PropTypes.string.isRequired,
-    avatar: PropTypes.string.isRequired,
-    private: PropTypes.bool.isRequired,
-    followed: PropTypes.string,
-    is_new: PropTypes.bool,
+    user: PropTypes.object.isRequired,
+    type: PropTypes.string.isRequired,
 };
 
 
 const UserList = props => {
-    let user_list = props.users.map(function (item, index) {
+    let user_list = props.users.map(function (user, index) {
         return (
-            <UserTableRow {...item}/>
+            <UserTableRow user={user} key={user.id} type={props.type}/>
         );
     });
     return (
@@ -223,6 +212,7 @@ const UserList = props => {
 };
 UserList.propTypes = {
     users: PropTypes.array.isRequired,
+    type: PropTypes.string.isRequired,
 };
 exports.UserList = UserList;
 

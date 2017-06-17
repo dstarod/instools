@@ -51,6 +51,16 @@ def generate_api_task(username, password):
         return str(e)
 
 
+@fake_users
+def load_subscribers_task(token):
+    return app[token].getTotalSelfFollowers()
+
+
+@fake_users
+def load_subscriptions_task(token):
+    return app[token].getTotalSelfFollowings()
+
+
 @fake_true
 def unfollow_user_task(user_id, token):
     app[token].unfollow(user_id)
@@ -134,7 +144,7 @@ def follow_user(request, token):
 @asyncio.coroutine
 def get_subscribers(request, token):
     subscribers = yield from loop.run_in_executor(
-        executor, app[token].getTotalSelfFollowers
+        executor, load_subscribers_task, token
     )
     return web.json_response(subscribers)
 
@@ -143,7 +153,7 @@ def get_subscribers(request, token):
 @asyncio.coroutine
 def get_subscriptions(request, token):
     subscriptions = yield from loop.run_in_executor(
-        executor, app[token].getTotalSelfFollowings
+        executor, load_subscriptions_task, token
     )
     return web.json_response(subscriptions)
 

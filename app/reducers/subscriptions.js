@@ -4,12 +4,26 @@ import {convertRawUser} from './helpers';
 
 exports.subscriptionListReducer = function (state={users: [], loading: false, loaded: false}, action) {
     switch (action.type) {
+        case constants.USER_CHANGES_WAITING:
+            return Object.assign(
+                {}, state, {
+                    users: state.users.map(
+                        function(user){
+                            if(user.id === action.payload){
+                                user.state = constants.USER_CHANGES_WAITING
+                            }
+                            return user;
+                        }
+                    ),
+                    loading: false,
+                    loaded: true,
+                }
+            );
         case constants.USER_CHANGES_IN_PROGRESS:
             let new_users = state.users.map(
                 function(user){
                     if(user.id === action.payload){
-                        console.log(user);
-                        user.followed = constants.USER_CHANGES_IN_PROGRESS;
+                        user.state = constants.USER_CHANGES_IN_PROGRESS;
                     }
                     return user;
                 }
@@ -17,6 +31,21 @@ exports.subscriptionListReducer = function (state={users: [], loading: false, lo
             return Object.assign(
                 {}, state, {
                     users: new_users,
+                    loading: false,
+                    loaded: true,
+                }
+            );
+        case constants.USER_CHANGES_FINISHED:
+            return Object.assign(
+                {}, state, {
+                    users: state.users.map(
+                        function(user){
+                            if(user.id === action.payload){
+                                user.state = constants.USER_CHANGES_FINISHED;
+                            }
+                            return user;
+                        }
+                    ),
                     loading: false,
                     loaded: true,
                 }
@@ -29,6 +58,15 @@ exports.subscriptionListReducer = function (state={users: [], loading: false, lo
                             return user.id !== action.payload
                         }
                     ),
+                    loading: false,
+                    loaded: true,
+                }
+            );
+        case constants.SUBSCRIPTION_APPEND:
+            const new_user = [action.payload];
+            return Object.assign(
+                {}, state, {
+                    users: new_user.concat(state.users),
                     loading: false,
                     loaded: true,
                 }

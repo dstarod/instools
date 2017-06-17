@@ -1,3 +1,5 @@
+import constants from '../constants';
+
 exports.convertRawUser = function (user) {
     return {
         key: user.pk,
@@ -6,7 +8,6 @@ exports.convertRawUser = function (user) {
         full_name: user.full_name,
         avatar: user.profile_pic_url,
         private: user.is_private,
-        followed: user.followed,
-        is_new: user.new,
+        state: constants.USER_CHANGES_FINISHED,
     };
 };

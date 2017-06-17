@@ -1,8 +1,14 @@
+exports.counter_user = {
+    avatar: "/static/img/noavatar.png",
+    full_name: "",
+    name: undefined,
+    key:'user-counter'
+};
+
 const constants = {
-    USER_FOLLOWER: 'USER_FOLLOWER',
-    USER_NOT_FOLLOWER: 'USER_NOT_FOLLOWER',
     USER_CHANGES_IN_PROGRESS: 'USER_CHANGES_IN_PROGRESS',
     USER_CHANGES_WAITING: 'USER_CHANGES_WAITING',
+    USER_CHANGES_FINISHED: 'USER_CHANGES_FINISHED',
 
     LOADING_IN_PROGRESS: 'LOADING_IN_PROGRESS',
 
@@ -16,7 +22,6 @@ const constants = {
     SUBSCRIBERS_LOADING_IN_PROGRESS: 'SUBSCRIBERS_LOADING_IN_PROGRESS',
     SUBSCRIBERS_LOADING_COMPLETE: 'SUBSCRIBERS_LOADING_COMPLETE',
     SUBSCRIBERS_LOADING_BREAK: 'SUBSCRIBERS_LOADING_BREAK',
-    SUBSCRIBER_REMOVE: 'SUBSCRIBER_REMOVE',
 
     // Reduce store keys for subscriptions a.k.a following
     SUBSCRIPTIONS_DROP_CACHE: 'SUBSCRIPTIONS_DROP_CACHE',
@@ -24,6 +29,7 @@ const constants = {
     SUBSCRIPTIONS_LOADING_COMPLETE: 'SUBSCRIPTIONS_LOADING_COMPLETE',
     SUBSCRIPTIONS_LOADING_BREAK: 'SUBSCRIPTIONS_LOADING_BREAK',
     SUBSCRIPTION_REMOVE: 'SUBSCRIPTION_REMOVE',
+    SUBSCRIPTION_APPEND: 'SUBSCRIPTION_APPEND',
 };
 
 exports.routes = {
@@ -40,6 +46,12 @@ exports.api_routes = {
     UNFOLLOW: '/api/unfollow/',
     LOGIN: '/api/login',
     LOGOUT: '/api/logout'
+};
+
+exports.list_type = {
+    NOT_FOLLOWERS: 'NOT_FOLLOWERS',
+    FRIENDS: 'FRIENDS',
+    FANS: 'FANS',
 };
 
 export default constants;

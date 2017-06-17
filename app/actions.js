@@ -2,6 +2,22 @@ import store from './store';
 import * as api from './api';
 import constants, {routes} from './constants';
 
+
+const logout = () => {
+    store.dispatch({
+        type: constants.LOGOUT,
+        payload: true
+    });
+    store.dispatch({
+        type: constants.SUBSCRIBERS_DROP_CACHE,
+        payload: true
+    });
+    store.dispatch({
+        type: constants.SUBSCRIPTIONS_DROP_CACHE,
+        payload: true
+    });
+};
+
 const catchApiError = error => {
     if (error.response) {
         if(error.response.data !== undefined){
@@ -11,6 +27,7 @@ const catchApiError = error => {
             alert(error.message);
         }
         if(error.response.status === 401){
+            logout();
             location.href = routes.LOGIN;
         }
     } else if (error.request) {
@@ -22,7 +39,7 @@ const catchApiError = error => {
 
 const setUserAsUnFollowed = function (user_id) {
     store.dispatch({
-        type: constants.SUBSCRIPTIONS_REMOVE,
+        type: constants.SUBSCRIPTION_REMOVE,
         payload: user_id
     });
 };
@@ -108,48 +125,63 @@ exports.Login = function(form_data) {
 };
 
 exports.Logout = function () {
-    api.logout(function () {
-        store.dispatch({
-            type: constants.LOGOUT,
-            payload: true
-        });
-        store.dispatch({
-            type: constants.SUBSCRIBERS_DROP_CACHE,
-            payload: true
-        });
-        store.dispatch({
-            type: constants.SUBSCRIPTIONS_DROP_CACHE,
-            payload: true
-        });
-    });
+    api.logout(logout);
 };
 
-exports.Follow = function (user_id) {
-    api.Follow([user_id], setUserAsChangingRelation, setUserAsFollowed)
-};
-
-exports.Unfollow = function (user_id) {
-    api.Unfollow(
-        [user_id],
-        (user_id) => {
+exports.Follow = function (user) {
+    api.Follow(
+        [user.id],
+        () => {
             store.dispatch({
                 type: constants.USER_CHANGES_IN_PROGRESS,
-                payload: user_id
+                payload: user.id
             });
         },
-        (user_id) => {
+        () => {
+            store.dispatch({
+                type: constants.SUBSCRIPTION_APPEND,
+                payload: user
+            });
+            store.dispatch({
+                type: constants.USER_CHANGES_FINISHED,
+                payload: user.id
+            });
+        }
+    )
+};
+
+exports.Unfollow = function (user) {
+    api.Unfollow(
+        [user.id],
+        () => {
+            store.dispatch({
+                type: constants.USER_CHANGES_IN_PROGRESS,
+                payload: user.id
+            });
+        },
+        () => {
             store.dispatch({
                 type: constants.SUBSCRIPTION_REMOVE,
-                payload: user_id
+                payload: user.id
+            });
+            store.dispatch({
+                type: constants.USER_CHANGES_FINISHED,
+                payload: user.id
             });
         }
     );
 };
 
 exports.UnfollowAll = function () {
-    const users = store.getState().userList.users.filter(function (user) {
-        return user.followed === constants.USER_FOLLOWER;
-    });
+    const subscribers_pk = store.getState().subscriberList.users.map(
+        (user) => user.id
+    );
+
+    const users = store.getState().subscriptionList.users
+        .filter(
+            (user) => !subscribers_pk.includes(user.id)
+        );
+
     users.map(function (user) {
         setUserWaiting(user.id);
     });

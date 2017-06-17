@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import constants from '../constants';
+import constants, {counter_user, list_type} from '../constants';
 import {
     UserRowTag,
     UserInfoTag,
@@ -14,20 +14,20 @@ import {
 import * as actions from '../actions';
 
 
-const FriendListView = props => (
-    <div>
-        <UserRowTag>
-            <UserInfoTag>
-                <UserTableRowInfo
-                    avatar="/static/img/noavatar.png"
-                    name={props.users.length + ' user(s)'}
-                    full_name=''/>
-            </UserInfoTag>
-            <UserControlTag />
-        </UserRowTag>
-        <UserList users={props.users} />
-    </div>
-);
+const FriendListView = props => {
+    counter_user.name = `${props.users.length} user(s)`;
+    return (
+        <div>
+            <UserRowTag>
+                <UserInfoTag>
+                    <UserTableRowInfo user={counter_user}/>
+                </UserInfoTag>
+                <UserControlTag />
+            </UserRowTag>
+            <UserList users={props.users} type={list_type.FRIENDS}/>
+        </div>
+    )
+};
 FriendListView.propTypes = {
     users: PropTypes.array.isRequired
 };
@@ -52,18 +52,9 @@ const mapStateToProps = function(store) {
     return {
         loading: store.subscriberList.loading || store.subscriptionList.loading,
         loaded: store.subscriberList.loaded && store.subscriptionList.loaded,
-        users: store.subscriptionList.users
-            .filter(
-                (user) => subscribers_pk.includes(user.id)
-            )
-            .map(
-                (user) => {
-                    if(user.followed === undefined){
-                        user.followed=constants.USER_FOLLOWER;
-                    }
-                    return user;
-                }
-            ),
+        users: store.subscriptionList.users.filter(
+            (user) => subscribers_pk.includes(user.id)
+        )
     };
 };
 
